@@ -13,6 +13,7 @@ uvicorn = "*"
 pydantic = "*"
 python-jose = "*"
 python-multipart = "*"
+celery = "*"
 
 [requires]
 python_version = "3.7"
