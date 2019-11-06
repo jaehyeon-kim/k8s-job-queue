@@ -1,0 +1,21 @@
+version: "3.7"
+services:
+  # mainsvc:
+  #   image: kapps/sidecar:rserve
+  #   container_name: mainsvc
+  #   expose:
+  #     - "8000"
+  broker:
+    image: bitnami/redis:5.0
+    container_name: broker
+    networks:
+      - app-tier
+    ports:
+      - "6379:6379"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+
+networks:
+  app-tier:
+    name: app-tier-network
+    driver: bridge

@@ -6,6 +6,7 @@ verify_ssl = true
 [dev-packages]
 black = "*"
 pylint = "*"
+watchdog = "*"
 
 [packages]
 fastapi = "*"
@@ -14,6 +15,7 @@ pydantic = "*"
 python-jose = "*"
 python-multipart = "*"
 celery = "*"
+redis = "*"
 
 [requires]
 python_version = "3.7"
