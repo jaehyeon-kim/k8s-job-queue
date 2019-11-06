@@ -1,19 +1,43 @@
 version: "3.7"
 services:
-  # mainsvc:
-  #   image: kapps/sidecar:rserve
-  #   container_name: mainsvc
-  #   expose:
-  #     - "8000"
-  broker:
+  redis:
     image: bitnami/redis:5.0
-    container_name: broker
+    container_name: redis
     networks:
       - app-tier
-    ports:
-      - "6379:6379"
+    expose:
+      - '6379'
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
+  job_queue:
+    build:
+      context: ./job_queue
+    image: job_queue
+    container_name: job_queue
+    networks:
+      - app-tier
+    depends_on:
+      - redis
+    environment:
+      CELERY_BACKEND_HOST: redis
+      CELERY_BACKEND_PORT: '6379'
+      CELERY_BROKER_HOST: redis
+      CELERY_BROKER_PORT: '6379'
+  webservice:
+    build:
+      context: .
+    image: webservice
+    container_name: webservice
+    networks:
+      - app-tier
+    depends_on:
+      - redis
+      - job_queue
+    environment:
+      CELERY_BACKEND_HOST: redis
+      CELERY_BACKEND_PORT: '6379'
+      CELERY_BROKER_HOST: redis
+      CELERY_BROKER_PORT: '6379'    
 
 networks:
   app-tier:

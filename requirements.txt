@@ -1,0 +1,20 @@
+-i https://pypi.org/simple
+amqp==2.5.1
+billiard==3.6.1.0
+celery==4.4.0rc3
+click==7.0
+fastapi==0.42.0
+h11==0.8.1
+httptools==0.0.13
+importlib-metadata==0.23
+kombu==4.6.5
+more-itertools==7.2.0
+pydantic==0.32.2
+pytz==2019.3
+redis==3.3.11
+starlette==0.12.9
+uvicorn==0.10.3
+uvloop==0.14.0rc2
+vine==1.3.0
+websockets==8.1
+zipp==0.6.0

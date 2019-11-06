@@ -12,8 +12,6 @@ watchdog = "*"
 fastapi = "*"
 uvicorn = "*"
 pydantic = "*"
-python-jose = "*"
-python-multipart = "*"
 celery = "*"
 redis = "*"
 
