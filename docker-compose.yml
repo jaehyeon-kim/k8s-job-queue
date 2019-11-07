@@ -1,43 +1,53 @@
 version: "3.7"
 services:
-  redis:
-    image: bitnami/redis:5.0
-    container_name: redis
+  webservice:
+    image: webservice
+    container_name: webservice
     networks:
       - app-tier
-    expose:
-      - '6379'
+    ports:
+      - 9000:9000
+    depends_on:
+      - redis
+      - job_queue
+    volumes:
+      - ./:/home/app
     environment:
-      - ALLOW_EMPTY_PASSWORD=yes
+      CELERY_BACKEND_HOST: redis
+      CELERY_BACKEND_PORT: "6379"
+      CELERY_BROKER_HOST: redis
+      CELERY_BROKER_PORT: "6379"
+    command: [
+      "main:app", "--host", "0.0.0.0", "--port", "9000", "--reload"
+    ]
   job_queue:
-    build:
-      context: ./job_queue
     image: job_queue
     container_name: job_queue
     networks:
       - app-tier
     depends_on:
       - redis
+    volumes:
+      - ./job_queue:/home/app
     environment:
       CELERY_BACKEND_HOST: redis
-      CELERY_BACKEND_PORT: '6379'
+      CELERY_BACKEND_PORT: "6379"
       CELERY_BROKER_HOST: redis
-      CELERY_BROKER_PORT: '6379'
-  webservice:
-    build:
-      context: .
-    image: webservice
-    container_name: webservice
+      CELERY_BROKER_PORT: "6379"
+    entrypoint:
+      - watchmedo
+    command: [
+      "auto-restart", "-d", ".", "-p", "'*.py'", "--", "celery", "worker", "-l", "info", "-A", "tasks"
+    ]    
+  redis:
+    image: bitnami/redis:5.0
+    container_name: redis
     networks:
       - app-tier
-    depends_on:
-      - redis
-      - job_queue
+    expose:
+      - "6379"
     environment:
-      CELERY_BACKEND_HOST: redis
-      CELERY_BACKEND_PORT: '6379'
-      CELERY_BROKER_HOST: redis
-      CELERY_BROKER_PORT: '6379'    
+      - ALLOW_EMPTY_PASSWORD=yes
 
 networks:
   app-tier:

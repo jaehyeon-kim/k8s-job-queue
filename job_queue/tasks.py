@@ -1,10 +1,21 @@
+import os
 import math
 import time
+from celery import Celery
 
-from . import app
+app = Celery(
+    "tasks",
+    backend="redis://{0}:{1}/0".format(
+        os.environ["CELERY_BACKEND_HOST"], os.environ["CELERY_BACKEND_PORT"]
+    ),
+    broker="redis://{0}:{1}/0".format(
+        os.environ["CELERY_BROKER_HOST"], os.environ["CELERY_BROKER_PORT"]
+    ),
+)
+app.conf.update(broker_transport_options={"visibility_timeout": 3600})
 
 
-@app.task(bind=True)
+@app.task(bind=True, name="long_task")
 def long_task(self, total):
     message = ""
     for i in range(total):
