@@ -9,5 +9,5 @@
         "100"
     ],
     "editor.formatOnSave": true,
-    "python.pythonPath": "/home/jaehyeon/.local/share/virtualenvs/k8s-fastapi-celery-redis-soy2E_8e/bin/python"
+    "python.pythonPath": "/home/jaehyeon/.local/share/virtualenvs/k8s-job-queue-ZlEKGFx6/bin/python"
 }
