@@ -4,10 +4,7 @@ library(jsonlite)
 library(futile.logger)
 
 source('./process-req.R')
-source('./src/jobs.R')
-
-
-RR(check_conn_only = TRUE)
+source('./tasks.R')
 
 .http.request <- process_request
 
