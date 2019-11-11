@@ -3,15 +3,11 @@ import math
 import time
 from celery import Celery
 
-app = Celery(
-    "tasks",
-    backend="redis://{0}:{1}/0".format(
-        os.environ["CELERY_BACKEND_HOST"], os.environ["CELERY_BACKEND_PORT"]
-    ),
-    broker="redis://{0}:{1}/0".format(
-        os.environ["CELERY_BROKER_HOST"], os.environ["CELERY_BROKER_PORT"]
-    ),
+redis_url = "redis://{0}:{1}/{2}".format(
+    os.environ["CELERY_HOST"], os.environ["CELERY_PORT"], os.environ["CELERY_DB"]
 )
+
+app = Celery("tasks", backend=redis_url, broker=redis_url)
 app.conf.update(broker_transport_options={"visibility_timeout": 3600})
 
 

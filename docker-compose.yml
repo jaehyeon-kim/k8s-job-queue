@@ -9,36 +9,51 @@ services:
       - 9000:9000
     depends_on:
       - redis
-      - job_queue
+      # - queue_celery
     volumes:
       - ./:/home/app
     environment:
-      CELERY_BACKEND_HOST: redis
-      CELERY_BACKEND_PORT: "6379"
-      CELERY_BROKER_HOST: redis
-      CELERY_BROKER_PORT: "6379"
+      CELERY_HOST: redis
+      CELERY_PORT: "6379"
+      CELERY_DB: "0"
+      RSERVE_HOST: queue_rserve
+      RSERVE_PORT: "8000"
     command: [
       "main:app", "--host", "0.0.0.0", "--port", "9000", "--reload"
     ]
-  job_queue:
-    image: job_queue
-    container_name: job_queue
+  # queue_celery:
+  #   image: queue_celery
+  #   container_name: queue_celery
+  #   networks:
+  #     - app-tier
+  #   depends_on:
+  #     - redis
+  #   volumes:
+  #     - ./queue_celery:/home/app
+  #   environment:
+  #     CELERY_HOST: redis
+  #     CELERY_PORT: "6379"
+  #     CELERY_DB: "0"
+  #   entrypoint:
+  #     - watchmedo
+  #   command: [
+  #     "auto-restart", "-d", ".", "-p", "'*.py'", "--", "celery", "worker", "-l", "info", "-A", "tasks"
+  #   ]
+  queue_rserve:
+    image: queue_rserve
+    container_name: queue_rserve
     networks:
       - app-tier
+    ports:
+      - 8000:8000
     depends_on:
       - redis
     volumes:
-      - ./job_queue:/home/app
+      - ./queue_rserve:/home/app
     environment:
-      CELERY_BACKEND_HOST: redis
-      CELERY_BACKEND_PORT: "6379"
-      CELERY_BROKER_HOST: redis
-      CELERY_BROKER_PORT: "6379"
-    entrypoint:
-      - watchmedo
-    command: [
-      "auto-restart", "-d", ".", "-p", "'*.py'", "--", "celery", "worker", "-l", "info", "-A", "tasks"
-    ]    
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      REDIS_DB: "1"
   redis:
     image: bitnami/redis:5.0
     container_name: redis

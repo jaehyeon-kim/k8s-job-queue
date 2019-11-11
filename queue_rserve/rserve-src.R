@@ -1,3 +1,4 @@
+library(RSclient)
 library(redux)
 library(jsonlite)
 library(futile.logger)
