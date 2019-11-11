@@ -3,3 +3,8 @@ Pipfile
 Pipfile.lock
 README.md
 __pycache__
+
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
