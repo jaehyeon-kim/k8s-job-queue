@@ -17,3 +17,12 @@ http http://localhost:9000/celery/collect?task_id=e31ec3e6-f44c-4212-9470-9c1928
 echo '{"total": 30}' | http POST http://localhost:9000/rserve/execute
 
 http http://localhost:9000/rserve/collect?task_id=2db859ed-557c-4d4b-b26f-1b5b690c346c
+
+
+kubectl apply -f manifests/redis.yaml
+kubectl apply -f manifests/queue_celery.yaml
+kubectl apply -f manifests/queue_rserve.yaml
+kubectl apply -f manifests/webservice.yaml
+
+
+echo '{"total": 6}' | http POST http://172.28.175.23:30000/celery/execute

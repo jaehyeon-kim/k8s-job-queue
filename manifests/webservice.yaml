@@ -5,11 +5,12 @@ metadata:
 spec:
   selector:
     app: main
+  type: NodePort
   ports:
     - protocol: TCP
       port: 80
       targetPort: 9000
-      nodePort: 3000
+      nodePort: 30000
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -19,7 +20,7 @@ spec:
   selector:
     matchLabels:
       app: main
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -34,7 +35,7 @@ spec:
             - name: REDIS_PORT
               value: "6379"
             - name: REDIS_DB
-              value: "1"
+              value: "0"
             - name: RSERVE_HOST
               value: rserve-service
             - name: RSERVE_PORT
