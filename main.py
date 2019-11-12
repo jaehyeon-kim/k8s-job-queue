@@ -14,7 +14,7 @@ def set_rserve_url(fname):
     )
 
 
-app = FastAPI(title="FastAPI Celery Example", version="0.0.1")
+app = FastAPI(title="FastAPI Job Queue Example", version="0.0.1")
 
 
 class ExecuteResp(BaseModel):
