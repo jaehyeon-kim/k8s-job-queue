@@ -60,9 +60,17 @@ async def execute_rserve_task(total: int = Body(..., min=1, max=50, embed=True))
         return r.json()
 
 
-@app.get("/rserve/collect", response_model=ResultResp, tags=["rserve"])
+@app.get(
+    "/rserve/collect",
+    response_model=ResultResp,
+    responses={500: {"model": ErrorResp}},
+    tags=["rserve"],
+)
 async def collect_rserve_task(task_id: str):
     jsn = json.dumps({"task_id": task_id})
     async with httpx.AsyncClient() as client:
-        r = await client.post(set_rserve_url("get_task"), json=jsn)
-        return {k:v for k,v in r.json().items() if k != 'b'}
+        try:
+            r = await client.post(set_rserve_url("get_task"), json=jsn)
+            return {k: v for k, v in r.json().items() if k != "state"}
+        except Exception:
+            raise HTTPException(status_code=500, detail="Fails to collect result")
