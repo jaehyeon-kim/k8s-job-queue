@@ -52,7 +52,7 @@ async def collect_celery_result(task_id: str):
     return resp.result
 
 
-@app.post("/rserve/execute", status_code=202, tags=["rserve"])
+@app.post("/rserve/execute", response_model=ExecuteResp, status_code=202, tags=["rserve"])
 async def execute_rserve_task(total: int = Body(..., min=1, max=50, embed=True)):
     jsn = json.dumps({"task_id": str(uuid4()), "total": total})
     async with httpx.AsyncClient() as client:
@@ -60,9 +60,9 @@ async def execute_rserve_task(total: int = Body(..., min=1, max=50, embed=True))
         return r.json()
 
 
-@app.get("/rserve/collect", tags=["rserve"])
+@app.get("/rserve/collect", response_model=ResultResp, tags=["rserve"])
 async def collect_rserve_task(task_id: str):
     jsn = json.dumps({"task_id": task_id})
     async with httpx.AsyncClient() as client:
         r = await client.post(set_rserve_url("get_task"), json=jsn)
-        return r.json()
+        return {k:v for k,v in r.json().items() if k != 'b'}

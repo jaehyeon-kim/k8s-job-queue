@@ -22,3 +22,4 @@ spec:
               value: "6379"
             - name: REDIS_DB
               value: "0"
+          args: ["worker", "-l", "info", "-A", "tasks", "-O", "fair"]
