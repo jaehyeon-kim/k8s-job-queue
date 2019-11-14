@@ -24,8 +24,17 @@ kubectl apply -f manifests/queue_celery.yaml
 kubectl apply -f manifests/queue_rserve.yaml
 kubectl apply -f manifests/webservice.yaml
 
+kubectl apply -f manifests
 
-echo '{"total": 20}' | http POST http://172.28.175.23:30000/celery/execute
+echo '{"total": 30}' | http POST http://172.28.175.23:30000/celery/execute
+
+export TASK_ID=87ae7a42-1ec0-4848-bf30-2f68175b38db
+
+http http://172.28.175.23:30000/celery/collect?task_id=$TASK_ID
 
 
-http http://172.28.175.23:30000/celery/collect?task_id=ed581738-2885-4264-a6ba-27d60eaaa94f
+echo '{"total": 30}' | http POST http://172.28.175.23:30000/rserve/execute
+
+export TASK_ID=f5d46986-1e89-4322-9d4e-7c1da6454534
+
+http http://172.28.175.23:30000/rserve/collect?task_id=$TASK_ID
