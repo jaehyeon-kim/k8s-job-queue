@@ -11,8 +11,6 @@ services:
       - redis
       - queue_celery
       - queue_rserve
-    volumes:
-      - ./:/home/app
     environment:
       REDIS_HOST: redis
       REDIS_PORT: "6379"
@@ -26,8 +24,6 @@ services:
       - app-tier
     depends_on:
       - redis
-    volumes:
-      - ./queue_celery:/home/app
     environment:
       REDIS_HOST: redis
       REDIS_PORT: "6379"
@@ -39,8 +35,6 @@ services:
       - app-tier
     depends_on:
       - redis
-    volumes:
-      - ./queue_rserve:/home/app
     environment:
       REDIS_HOST: redis
       REDIS_PORT: "6379"
